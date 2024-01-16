@@ -1,5 +1,6 @@
 plugins {
     id("com.android.library")
+    id("maven-publish")
 }
 
 android {
@@ -14,12 +15,32 @@ android {
     libraryVariants.all {
         it.processJavaResourcesProvider.get().dependsOn(writeVersionFile)
     }
+
+    android {
+        lint {
+            //abortOnError false
+            disable 'ResourceType'
+        }
+    }
 }
 
 dependencies {
     api("androidx.annotation:annotation:$androidx_annotation_version")
     api(project(":core:core"))
     api(project(":customview"))
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            libraryProject(MavenPublication) {
+                setGroupId 'io.github.oneuiproject.sesl'
+                setArtifactId 'drawerlayout'
+                version '2.0.0'
+                artifact bundleReleaseAar
+            }
+        }
+    }
 }
 
 task writeVersionFile() {

@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("maven-publish")
 }
 
 android {
@@ -21,6 +22,19 @@ dependencies {
     api("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
     api("androidx.annotation:annotation:$androidx_annotation_version")
     api(project(":core:core"))
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            libraryProject(MavenPublication) {
+                setGroupId 'io.github.oneuiproject.sesl'
+                setArtifactId 'core-ktx'
+                version '2.0.0-beta01'
+                artifact bundleReleaseAar
+            }
+        }
+    }
 }
 
 task writeVersionFile() {
